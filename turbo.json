@@ -1,0 +1,78 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "tasks": {
+    "build": {
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "test": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "clean": {
+      "cache": false
+    }
+  },
+  "ui": "stream",
+  "globalEnv": [
+    "ADOBE_WEBHOOK_SECRET",
+    "ANTHROPIC_API_KEY",
+    "ASSETS_BUCKET",
+    "AUTH_GITHUB_ID",
+    "AUTH_GITHUB_SECRET",
+    "AUTH_GOOGLE_ID",
+    "AUTH_GOOGLE_SECRET",
+    "AUTH_SECRET",
+    "AUTH_URL",
+    "AWS_ACCESS_KEY",
+    "AWS_ACCESS_KEY_SECRET",
+    "AWS_CREDENTIAL_SECRET_ID",
+    "AWS_REGION",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_SECRET_ACCESS_KEY_S3",
+    "AWS_ACCESS_KEY_S3",
+    "AWS_SECRETS_ID",
+    "BETTER_AUTH_SECRET",
+    "BETTER_AUTH_URL",
+    "CLAUDE_CODE_OAUTH_TOKEN",
+    "COREPACK_ENABLE_STRICT",
+    "DATABASE_API_KEY",
+    "DATABASE_URL",
+    "DATABASE_URL_UNPOOLED",
+    "DIRECT_URL",
+    "IS_PROD",
+    "LLAMA_API_KEY",
+    "NPM_RC",
+    "NODE_ENV",
+    "PGDATABASE",
+    "PORT",
+    "REDIS_CA_PATH",
+    "REDIS_CA_PEM",
+    "REDIS_CLIENT_CERT",
+    "REDIS_CLIENT_KEY",
+    "REDIS_HOST",
+    "REDIS_URL",
+    "SERVER_HOSTNAME",
+    "VERCEL_TARGET_ENV",
+    "VERCEL_URL",
+    "VERCEL_ENV",
+    "V0_API_KEY",
+    "VOYAGE_API_KEY",
+    "X_AI_KEY",
+    "X_AI_COLLECTION",
+    "X_AI_MANAGEMENT_API_KEY",
+    "X_AI_TEAM_ID"
+  ]
+}

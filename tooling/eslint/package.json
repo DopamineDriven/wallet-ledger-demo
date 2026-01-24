@@ -1,0 +1,40 @@
+{
+  "name": "@wallet-ledger/eslint-config",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./base": "./base.mjs",
+    "./next": "./next.mjs",
+    "./react": "./react.mjs"
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@eslint/compat": "^2.0.1",
+    "@eslint/js": "^9.39.2",
+    "@next/eslint-plugin-next": "^16.1.4",
+    "eslint-config-turbo": "^2.7.5",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-turbo": "^2.7.5",
+    "jiti": "^2.6.1",
+    "typescript-eslint": "^8.53.1"
+  },
+  "devDependencies": {
+    "@wallet-ledger/prettier-config": "workspace:*",
+    "@wallet-ledger/tsconfig": "workspace:*",
+    "@typescript/native-preview": "catalog:tsgo7",
+    "eslint": "catalog:eslint",
+    "prettier": "^3.8.1",
+    "typescript": "catalog:ts"
+  },
+  "prettier": "@wallet-ledger/prettier-config"
+}

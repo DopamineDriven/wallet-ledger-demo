@@ -1,0 +1,26 @@
+packages:
+  - apps/*
+  - packages/*
+  - tooling/*
+
+catalogs:
+  eslint:
+    eslint: ^9.39.2
+  node:
+    '@types/node': ^25.0.10
+  prettier:
+    prettier: ^3.8.1
+  ts:
+    typescript: ^5.9.3
+  tsdown:
+    tsdown: ^0.20.1
+  tsgo7:
+    '@typescript/native-preview': ^7.0.0-dev.20260123.3
+  tseslint:
+    typescript-eslint: ^8.53.1
+
+onlyBuiltDependencies:
+  - '@swc/core'
+  - esbuild
+  - sharp
+  - unrs-resolver

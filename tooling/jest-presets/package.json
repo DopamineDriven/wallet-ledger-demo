@@ -1,0 +1,32 @@
+{
+  "name": "@wallet-ledger/jest-presets",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./browser": "./browser/jest-preset.mjs",
+    "./node": "./node/jest-preset.mjs"
+  },
+  "files": [
+    "browser/jest-preset.mjs",
+    "node/jest-preset.mjs"
+  ],
+  "scripts": {
+    "clean": "git clean -xdf node_modules"
+  },
+  "peerDependencies": {
+    "jest": ">=30.2.0"
+  },
+  "dependencies": {
+    "ts-jest": "^29.4.6"
+  },
+  "devDependencies": {
+    "@wallet-ledger/prettier-config": "workspace:*",
+    "@wallet-ledger/tsconfig": "workspace:*",
+    "jest-environment-jsdom": "^30.2.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3"
+  },
+  "prettier": "@wallet-ledger/prettier-config"
+}

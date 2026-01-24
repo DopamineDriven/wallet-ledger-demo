@@ -1,0 +1,25 @@
+{
+  "name": "@wallet-ledger/prettier-config",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2"
+  },
+  "devDependencies": {
+    "@wallet-ledger/tsconfig": "workspace:*",
+    "@typescript/native-preview": "catalog:tsgo7",
+    "typescript": "catalog:ts"
+  },
+  "prettier": "@wallet-ledger/prettier-config"
+}
