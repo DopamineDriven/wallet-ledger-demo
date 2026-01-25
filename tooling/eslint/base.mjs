@@ -1,14 +1,22 @@
 /// <reference types="./types.d.ts" />
-
 import { join, relative } from "node:path";
+import { includeIgnoreFile } from "@eslint/compat";
 import eslint from "@eslint/js";
+import safeql from "@ts-safeql/eslint-plugin/config";
 import importPlugin from "eslint-plugin-import";
 import turboPlugin from "eslint-plugin-turbo";
 import tseslint from "typescript-eslint";
-import { includeIgnoreFile } from "@eslint/compat";
 
 const project = relative(process.cwd(), "tsconfig.json");
-
+/**
+ *
+ * @param {string} pathname
+ * @returns {string}
+ */
+const migrationsDir = pathname =>
+  pathname
+    .slice(0, pathname.lastIndexOf("turborepo/"))
+    .concat("turborepo/packages/db/prisma/migrations");
 export default tseslint.config(
   includeIgnoreFile(join(import.meta.dirname, "../../.gitignore")),
   {
@@ -29,9 +37,20 @@ export default tseslint.config(
       import: importPlugin,
       turbo: turboPlugin
     },
-    ignores: ["**/*.config.*", "public/**/*.js", "**/node_modules/**", ".vscode/**/*.json"],
+    ignores: [
+      "**/*.config.*",
+      "public/**/*.js",
+      "**/node_modules/**",
+      ".vscode/**/*.json"
+    ],
     extends: [
       eslint.configs.recommended,
+      safeql.configs.connections({
+        migrationsDir: migrationsDir(new URL(import.meta.url).pathname),
+        targets: [
+          { tag: "prisma.+($queryRaw|$executeRaw)", transform: "{type}[]" }
+        ]
+      }),
       ...tseslint.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
       ...tseslint.configs.stylisticTypeChecked

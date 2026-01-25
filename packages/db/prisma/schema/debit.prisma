@@ -1,0 +1,12 @@
+
+model DebitDetail {
+  ledgerEntryId   String      @id
+  ledgerEntry     LedgerEntry @relation(fields: [ledgerEntryId], references: [id], onDelete: Cascade)
+  itemId          String      @db.Uuid
+  itemName        String
+  amount          BigInt
+  createdAt       DateTime    @default(now())
+
+  @@index([itemId])
+  @@index([itemId, createdAt(sort: Desc)])
+}

@@ -10,15 +10,12 @@
     "lint": "eslint",
     "format": "prisma format",
     "clean": "git clean -xdf .turbo dist node_modules",
-    "v:postbuild": "pnpm cp:binaries",
     "prebuild": "rm -rf dist/ && pnpm db:generate",
     "predev": "pnpm db:generate",
+    "db:deploy": "prisma migrate deploy",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy",
-    "prisma:studio": "prisma studio --browser none --port 7777",
-    "precp:binaries": "tsx src/test/scan-output.ts --scan output",
-    "cp:binaries": "cp -r ./src/generated/prisma/*.x.so.node ./dist/generated/prisma"
+    "db:studio": "prisma studio --browser none --port 7777"
   },
   "files": [
     "dist/**",
@@ -26,10 +23,20 @@
     "package.json"
   ],
   "exports": {
+    "./factory": {
+      "types": "./dist/factory.d.ts",
+      "import": "./dist/factory.js",
+      "default": "./dist/factory.js"
+    },
     "./node": {
       "types": "./dist/db.d.ts",
       "import": "./dist/db.js",
       "default": "./dist/db.js"
+    },
+    "./db-accelerate": {
+      "types": "./dist/db-accelerate.d.ts",
+      "import": "./dist/db-accelerate.js",
+      "default": "./dist/db-accelerate.js"
     },
     "./node/generated/client": {
       "types": "./dist/client-node.d.ts",
@@ -50,17 +57,22 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
-    "jiti": "^2.6.1"
+    "@prisma/client-runtime-utils": "^7.3.0",
+    "@prisma/extension-accelerate": "^3.0.1",
+    "@prisma/extension-optimize": "^2.0.1",
+    "dotenv": "^17.2.3"
   },
   "devDependencies": {
     "@d0paminedriven/fs": "^11.0.0",
+    "@types/node": "catalog:node",
+    "@types/pg": "^8.16.0",
+    "@typescript/native-preview": "catalog:tsgo7",
     "@wallet-ledger/eslint-config": "workspace:*",
     "@wallet-ledger/prettier-config": "workspace:*",
     "@wallet-ledger/tsconfig": "workspace:*",
-    "@types/node": "catalog:node",
-    "@typescript/native-preview": "catalog:tsgo7",
-    "dotenv": "^17.2.3",
     "eslint": "catalog:eslint",
+    "jiti": "catalog:jiti",
+    "pg": "^8.17.2",
     "prettier": "catalog:prettier",
     "prisma": "^7.3.0",
     "rolldown": "^1.0.0-rc.1",

@@ -46,6 +46,7 @@
   "editor.suggest.showStatusBar": true,
   "eslint.enable": true,
   "eslint.useFlatConfig": true,
+  "eslint.useRealpaths": true,
   "eslint.nodePath": "node_modules",
   "terminal.integrated.suggest.enabled": false,
   "eslint.rules.customizations": [
@@ -120,10 +121,10 @@
     "scminput": false
   },
   "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
+    "editor.defaultFormatter": "Prisma.prisma-insider"
   },
   "python.analysis.enableColorPicker": false,
-  "prisma.pinToPrisma6": true,
+  "prisma.pinToPrisma6": false,
   "[sql]": {
     "editor.defaultFormatter": "ReneSaarsoo.sql-formatter-vsc"
   }

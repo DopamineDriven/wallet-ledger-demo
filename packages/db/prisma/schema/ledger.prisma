@@ -1,0 +1,23 @@
+model LedgerEntry {
+  id            String          @id @default(cuid(2))
+  userId      String            @db.Uuid
+  entryType   EntryType
+  status      EntryStatus @default(COMPLETED)
+  amount      BigInt
+  description String?
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  creditDetail  CreditDetail?
+  debitDetail   DebitDetail?
+  idempotency   IdempotencyRecord?
+
+
+  @@index([userId])
+  @@index([userId, entryType])
+  @@index([userId, status])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([entryType, createdAt(sort: Desc)])
+  @@index([status, createdAt])
+}

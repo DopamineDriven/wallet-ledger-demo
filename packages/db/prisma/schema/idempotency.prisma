@@ -1,0 +1,25 @@
+model IdempotencyRecord {
+  id           String      @id @default(cuid(2))
+  key          String
+  userId       String      @db.Uuid
+  endpoint     ApiEndpoint @default(PURCHASES)
+  statusCode   Int
+  responseBody String?     @db.Text
+
+  ledgerEntryId String?
+  ledgerEntry   LedgerEntry? @relation(fields: [ledgerEntryId], references: [id], onDelete: SetNull)
+
+  retryCount  Int       @default(0)
+  lastRetryAt DateTime?
+
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@unique([ledgerEntryId])
+  @@unique([key, userId])
+  @@index([expiresAt])
+  @@index([endpoint])
+  @@index([statusCode])
+  @@index([key])
+  @@index([userId])
+}

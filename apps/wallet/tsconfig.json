@@ -1,0 +1,14 @@
+{
+  "extends": "@wallet-ledger/tsconfig/node-pkg.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "exactOptionalPropertyTypes": true,
+    "outDir": "dist",
+    "rootDir": "./src"
+  },
+  "exclude": ["dist"],
+  "include": ["src/**/*.ts"]
+}

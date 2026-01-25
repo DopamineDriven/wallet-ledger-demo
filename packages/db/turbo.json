@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "src/**/*.ts",
+        "edge/**/*.ts",
+        "prisma/schema/**/*.prisma",
+        "prisma/sql/**/*.sql",
+        "prisma.config.ts",
+        "tsconfig.json",
+        "package.json",
+        "eslint.config.ts"
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+model CreditDetail {
+  ledgerEntryId   String      @id
+  ledgerEntry     LedgerEntry @relation(fields: [ledgerEntryId], references: [id], onDelete: Cascade)
+  amountAllocated BigInt
+  createdAt       DateTime    @default(now())
+}

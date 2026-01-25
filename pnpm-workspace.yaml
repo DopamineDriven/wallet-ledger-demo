@@ -14,13 +14,16 @@ catalogs:
     typescript: ^5.9.3
   tsdown:
     tsdown: ^0.20.1
-  tsgo7:
-    '@typescript/native-preview': ^7.0.0-dev.20260123.3
   tseslint:
     typescript-eslint: ^8.53.1
-
+  tsgo7:
+    '@typescript/native-preview': ^7.0.0-dev.20260124.1
+  jiti:
+    jiti: ^2.6.1
 onlyBuiltDependencies:
+  - '@prisma/engines'
   - '@swc/core'
   - esbuild
+  - prisma
   - sharp
   - unrs-resolver

@@ -1,0 +1,34 @@
+generator client {
+  provider               = "prisma-client"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
+  output                 = "../../src/generated/prisma"
+  runtime                = "nodejs"
+  moduleFormat           = "esm"
+  compilerBuild          = "fast"
+  previewFeatures        = ["postgresqlExtensions", "relationJoins", "strictUndefinedChecks"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EntryType {
+  CREDIT
+  DEBIT
+}
+
+enum EntryStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REVERSED
+}
+
+enum ApiEndpoint {
+  CREDITS // /api/credits (POST)
+  PURCHASES // /api/purchases (POST)
+  ITEMS // /api/items (GET)
+  BALANCE // /api/balance (GET)
+  UNKNOWN // fallback escape hatch
+}
