@@ -1,5 +1,5 @@
 import { createServer, type Server } from "node:http";
-import type { PrismaClient } from "@wallet-ledger/db";
+import type { PrismaClient } from "@wallet-ledger/db/node";
 import { extractUserId, sendError } from "@/utils/http.ts";
 import { isValidUuid } from "@/utils/validation.ts";
 import { handleGetItems } from "@/handlers/items.ts";
@@ -8,8 +8,8 @@ import { handlePostCredits } from "@/handlers/credits.ts";
 import { handlePostPurchases } from "@/handlers/purchases.ts";
 
 export class WalletServer {
-  private server: Server;
-  private prisma: PrismaClient;
+  private server;
+  private prisma;
 
   constructor(prisma: PrismaClient) {
     this.prisma = prisma;
@@ -69,11 +69,11 @@ export class WalletServer {
     this.server.listen(port, callback);
   }
 
-  close(): Promise<void> {
-    return new Promise((resolve, reject) => {
+  close() {
+    const promise = new Promise((resolve, reject) => {
       this.server.close((err) => {
         if (err) reject(err);
-        else resolve();
+        else return resolve;
       });
     });
   }

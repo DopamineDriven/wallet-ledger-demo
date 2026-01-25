@@ -1,33 +1,13 @@
-import * as dotenv from "dotenv";
-import { DbService } from "@wallet-ledger/db/node";
 import { WalletServer } from "@/server/server.ts";
+import * as dotenv from "dotenv";
+import { DbServiceMixin, PrismaDbService } from "@wallet-ledger/db/factory";
+import { DbService } from "@wallet-ledger/db/node";
 
 dotenv.config({ quiet: true });
 
-export { ItemSeeder, dataGenFactory } from "@/data/seed.ts";
-export type {
-  AllProductPaths,
-  CategoryUnion,
-  DataApiOpts,
-  ExpandedSeeder,
-  FilterBySelect,
-  FilterResults,
-  FullRes,
-  ItemSeederEntity,
-  ItemSeederProductsEntity,
-  ItemSeederSingleton,
-  ProductCats,
-  ProductDataFull,
-  ProductDims,
-  ProductMetaFields,
-  ProductPath,
-  ProductReviewsSingleton,
-  SelectUnion,
-  SortByUnion
-} from "@/data/types.ts";
-
-export { dummyData } from "@/items/gen/items-data.ts";
 export { WalletServer } from "@/server/server.ts";
+export { CATALOG_ITEMS, getAllItems, getItemById } from "@/services/items.ts";
+export type { CatalogItem } from "@/services/items.ts";
 
 declare module "http" {
   interface IncomingHttpHeaders extends NodeJS.Dict<string | string[]> {
@@ -71,7 +51,7 @@ declare global {
   }
 }
 
-function main(): void {
+async function main(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL;
 
   if (!databaseUrl) {
@@ -79,7 +59,11 @@ function main(): void {
     process.exit(1);
   }
 
-  const db = new DbService(databaseUrl);
+  const db = new PrismaDbService({
+    connectionString: databaseUrl,
+    idleTimeoutMs: 30000,
+    poolMax: 1000
+  }).dbBase;
   const server = new WalletServer(db.prismaClient);
 
   const port = parseInt(process.env.PORT ?? "3000", 10);

@@ -1,10 +1,29 @@
+export class ItemsService {
+  protected m = new Map<string, CatalogItem>();
+  constructor() {}
+
+  async get() {
+    const items = (await import("@wallet-ledger/seed/items")).seededData;
+    if (this.m.size === 0 || items.length < 1) {
+      for (const item of items) {
+        if (!this.m.has(item.id)) {
+          this.m.set(item.id, item);
+        }
+      }
+      return (await import("@wallet-ledger/seed/items")).seededData;
+    } else {
+      return Array.from(this.m.values());
+    }
+  }
+}
+
 export interface CatalogItem {
   id: string;
   name: string;
   price: number;
 }
 
-export const CATALOG_ITEMS: CatalogItem[] = [
+export const CATALOG_ITEMS = [
   {
     id: "33456444-29af-4484-b5d1-af61d06ef889",
     name: "iPhone 13 Pro",
@@ -25,11 +44,11 @@ export const CATALOG_ITEMS: CatalogItem[] = [
     name: "Apple Watch Series 4 Gold",
     price: 34999
   }
-];
+] satisfies CatalogItem[];
 
-const CATALOG_MAP = new Map(CATALOG_ITEMS.map((item) => [item.id, item]));
+const CATALOG_MAP = new Map(CATALOG_ITEMS.map(item => [item.id, item]));
 
-export function getAllItems(): CatalogItem[] {
+export function getAllItems() {
   return CATALOG_ITEMS;
 }
 

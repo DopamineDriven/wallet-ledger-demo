@@ -1,9 +1,10 @@
-import type { PrismaClient } from "@wallet-ledger/db";
+import type { PrismaClient } from "@wallet-ledger/db/node";
 import type { CatalogItem } from "./items.ts";
 
-type TransactionClient = Parameters<
-  Parameters<PrismaClient["$transaction"]>[0]
->[0];
+type TransactionClient = Omit<
+  PrismaClient,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+>;
 
 function uuidToLockKey(uuid: string): bigint {
   const hex = uuid.replace(/-/g, "");

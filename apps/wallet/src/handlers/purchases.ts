@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { PrismaClient } from "@wallet-ledger/db";
+import type { PrismaClient } from "@wallet-ledger/db/node";
 import { parseJsonBody, sendNoContent, sendError } from "@/utils/http.ts";
 import { isValidUuid } from "@/utils/validation.ts";
 import { getItemById } from "@/services/items.ts";

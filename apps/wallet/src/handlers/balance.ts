@@ -1,5 +1,5 @@
 import type { ServerResponse } from "node:http";
-import type { PrismaClient } from "@wallet-ledger/db";
+import type { PrismaClient } from "@wallet-ledger/db/node";
 import { sendJson } from "@/utils/http.ts";
 import { calculateBalance } from "@/services/ledger.ts";
 
@@ -11,3 +11,5 @@ export async function handleGetBalance(
   const balance = await calculateBalance(prisma, userId);
   sendJson(res, 200, { balance: Number(balance) });
 }
+
+export class BalanceHandler {}

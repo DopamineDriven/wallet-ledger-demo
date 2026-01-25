@@ -48,7 +48,10 @@
     "lint": "eslint",
     "typecheck": "tsgo --noEmit",
     "start": "node dist/index.js",
-    "test": "node --test --import tsx --test-reporter spec"
+    "test": "node --test --import tsx --test-reporter spec src/test/*.test.ts",
+    "test:validation": "node --test --import tsx --test-reporter spec src/test/validation.test.ts",
+    "test:api": "node --test --import tsx --test-reporter spec src/test/api.test.ts",
+    "test:concurrency": "node --test --import tsx --test-reporter spec src/test/concurrency.test.ts"
   },
   "prettier": "@wallet-ledger/prettier-config",
   "dependencies": {
