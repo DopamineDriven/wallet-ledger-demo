@@ -1,10 +1,11 @@
+import { randomUUID } from "node:crypto";
 import type {
   AllProductPaths,
   DataApiOpts,
   FullRes,
   ProductDataFull,
   SelectUnion
-} from "@/data/types.ts";
+} from "@/types.ts";
 import { Fs } from "@d0paminedriven/fs";
 import type { CTR, Unenumerate } from "@wallet-ledger/types";
 
@@ -12,7 +13,7 @@ export class ItemSeeder extends Fs {
   constructor() {
     super(process.cwd());
   }
-  public safeErrMsg(err: unknown) {
+  protected safeErrMsg(err: unknown) {
     if (err instanceof Error) {
       return err.message;
     } else if (typeof err === "object" && err != null) {
@@ -30,7 +31,6 @@ export class ItemSeeder extends Fs {
       throw new Error("UUID Target count must be a postive number");
     }
     const agg = Array.of<string>();
-    const { randomUUID } = await import("node:crypto");
     for (const _i of this.len(Math.round(count))) {
       agg.push(randomUUID());
     }
@@ -83,11 +83,11 @@ export class ItemSeeder extends Fs {
   }
 
   public async reusableFetch<const S extends keyof ProductDataFull>(
-    path: string,
+    path: AllProductPaths,
     qParams: CTR<DataApiOpts<S>, "select">
   ): Promise<FullRes<S>>;
   public async reusableFetch(
-    path: string,
+    path: AllProductPaths,
     qParams: DataApiOpts<keyof ProductDataFull>
   ): Promise<FullRes<keyof ProductDataFull>>;
   public async reusableFetch<
@@ -106,7 +106,7 @@ export class ItemSeeder extends Fs {
       }
     }
     const urlPrimed = this.handleQp(arr, `https://dummyjson.com/${path}`);
-
+    console.log(urlPrimed);
     return await fetch(urlPrimed, {
       method: "GET",
       headers: {
@@ -123,6 +123,39 @@ export class ItemSeeder extends Fs {
   private IdMap = new Map<number, string>();
   private len<const R extends number = number>(r = 20 as R) {
     return Array.from({ length: r });
+  }
+
+  public validProductPath(s: string) {
+    return (
+      s === "products" ||
+      s === "products/categories" ||
+      s === "products/category/beauty" ||
+      s === "products/category/fragrances" ||
+      s === "products/category/furniture" ||
+      s === "products/category/groceries" ||
+      s === "products/category/home-decoration" ||
+      s === "products/category/kitchen-accessories" ||
+      s === "products/category/laptops" ||
+      s === "products/category/mens-shirts" ||
+      s === "products/category/mens-shoes" ||
+      s === "products/category/mens-watches" ||
+      s === "products/category/mobile-accessories" ||
+      s === "products/category/motorcycle" ||
+      s === "products/category/skin-care" ||
+      s === "products/category/smartphones" ||
+      s === "products/category/sports-accessories" ||
+      s === "products/category/sports-accessories" ||
+      s === "products/category/sunglasses" ||
+      s === "products/category/tablets" ||
+      s === "products/category/tops" ||
+      s === "products/category/vehicle" ||
+      s === "products/category/womens-bags" ||
+      s === "products/category/womens-dresses" ||
+      s === "products/category/womens-jewellery" ||
+      s === "products/category/womens-shoes" ||
+      s === "products/category/womens-watches" ||
+      s === "products/category-list"
+    );
   }
   public async genDummyData<
     const A extends AllProductPaths = AllProductPaths,
@@ -148,12 +181,13 @@ export class ItemSeeder extends Fs {
       price: number;
     }>();
 
-    for (const [idNo, id] of getUUIDs.entries()) {
+    for (const [idNo, id] of Array.from(getUUIDs.entries())) {
       this.IdMap.set(idNo, id);
     }
-
-    for (const [pNo, pData] of wow.products.entries()) {
+    console.log(wow.products);
+    for (const [pNo, pData] of Array.from(wow.products.entries())) {
       pData.title;
+      pData.description;
       // title -> name
       // dollars -> cents
       // id Int -> UUID
@@ -172,64 +206,31 @@ export class ItemSeeder extends Fs {
     }
     return seederArr;
   }
+
+  public seeder = async <
+    const P extends AllProductPaths,
+    const T extends keyof ProductDataFull
+  >(
+    path = "products" as P,
+    qPow: CTR<DataApiOpts<T>, "select">
+  ) => {
+    return await this.reusableFetch(path, qPow);
+  };
 }
 
-const seed = new ItemSeeder();
-
-seed
-  .genDummyData("products", {
-    limit: 20,
-    order: "desc",
-    select: ["price", "id", "title", "description"],
-    skip: 0,
-    sortBy: "price"
-  })
-  .then(v => {
-    const toJSON = JSON.stringify(v, null, 2);
-    const templatize = `export const dummyData = ${toJSON};`;
-    seed.withWs(`src/items/gen/items-data.ts`, templatize);
-  });
-
-/**
-   *
-   * THE INFERRED RETURN TYPE
-   *
-   * const _data: () => Promise<{
-    products: {
-        id: number;
-        title: string;
-        description: string;
-        price: number;
-        tags: string[];
-        dimensions: {
-            width: number;
-            height: number;
-            depth: number;
-        };
-        reviews: {
-            rating: number;
-            comment: string;
-            date: string;
-            reviewerName: string;
-            reviewerEmail: string;
-        }[];
-        meta: {
-            createdAt: string;
-            updatedAt: string;
-            barcode: string;
-            qrCode: string;
-        };
-        images: string[];
-    }[];
-    total: number;
-    skip: number;
-    limit: number;
-}>
-   */
-export const dataGenFactory = async <
-  const P extends string,
-  const T extends keyof ProductDataFull
->(
-  path: P,
-  qPow: CTR<DataApiOpts<T>, "select">
-) => new ItemSeeder().reusableFetch(path, qPow);
+// const seed = new ItemSeeder();
+// if (process.argv[3] === "test") {
+//   seed
+//     .genDummyData("products", {
+//       limit: 20,
+//       order: "desc",
+//       select: ["price", "id", "title", "description"],
+//       skip: 0,
+//       sortBy: "price"
+//     })
+//     .then(v => {
+//       const toJSON = JSON.stringify(v, null, 2);
+//       const templatize = `export const dummyData = ${toJSON};`;
+//       seed.withWs(`src/items/gen/items-data.ts`, templatize);
+//     });
+// }
