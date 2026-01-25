@@ -2,11 +2,9 @@ export type Unenumerate<T> = T extends (infer U)[] | readonly (infer U)[]
   ? U
   : T;
 
-
 export type BigIntKeys<T> = {
   [K in keyof T]: T[K] extends bigint ? K : never;
 }[keyof T];
-
 
 export type SerializeBigInts<T, Serialized extends boolean = false> = DX<{
   [K in keyof T]: T[K] extends bigint
@@ -15,7 +13,6 @@ export type SerializeBigInts<T, Serialized extends boolean = false> = DX<{
       : bigint
     : T[K];
 }>;
-
 
 // precision (field-level) targeting
 export type PrecisionSerializeBigIntField<
