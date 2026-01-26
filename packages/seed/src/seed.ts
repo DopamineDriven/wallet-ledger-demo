@@ -9,7 +9,7 @@ import type {
 import { Fs } from "@d0paminedriven/fs";
 import type { CTR, Unenumerate } from "@wallet-ledger/types";
 
-export class ItemSeeder extends Fs {
+export class ItemSeeder<B extends keyof ProductDataFull> extends Fs {
   constructor() {
     super(process.cwd());
   }
@@ -103,7 +103,7 @@ export class ItemSeeder extends Fs {
       for (const [_, v] of qParams.arr.entries()) {
         const format = [v[0], `${v[1]}`.trim()] as const;
         arr.push(format.join("="));
-      }
+      } 
     }
     const urlPrimed = this.handleQp(arr, `https://dummyjson.com/${path}`);
     console.log(urlPrimed);

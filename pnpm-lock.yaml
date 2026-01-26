@@ -82,7 +82,7 @@ importers:
         specifier: catalog:prettier
         version: 3.8.1
       tsx:
-        specifier: ^4.21.0
+        specifier: catalog:tsx
         version: 4.21.0
       turbo:
         specifier: ^2.7.6
@@ -346,6 +346,9 @@ importers:
 
   tooling/eslint:
     dependencies:
+      '@d0paminedriven/fs':
+        specifier: catalog:ddfs
+        version: 11.0.0
       '@eslint/compat':
         specifier: ^2.0.1
         version: 2.0.1(eslint@9.39.2(jiti@2.6.1))
@@ -371,6 +374,9 @@ importers:
         specifier: catalog:tseslint
         version: 8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
     devDependencies:
+      '@types/node':
+        specifier: catalog:node
+        version: 25.0.10
       '@typescript/native-preview':
         specifier: catalog:tsgo7
         version: 7.0.0-dev.20260124.1

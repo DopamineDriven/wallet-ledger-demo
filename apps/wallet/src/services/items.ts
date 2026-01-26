@@ -1,21 +1,4 @@
-export class ItemsService {
-  protected m = new Map<string, CatalogItem>();
-  constructor() {}
-
-  async get() {
-    const items = (await import("@wallet-ledger/seed/items")).seededData;
-    if (this.m.size === 0 || items.length < 1) {
-      for (const item of items) {
-        if (!this.m.has(item.id)) {
-          this.m.set(item.id, item);
-        }
-      }
-      return (await import("@wallet-ledger/seed/items")).seededData;
-    } else {
-      return Array.from(this.m.values());
-    }
-  }
-}
+import { seededData } from "@wallet-ledger/seed";
 
 export interface CatalogItem {
   id: string;
@@ -23,35 +6,83 @@ export interface CatalogItem {
   price: number;
 }
 
-export const CATALOG_ITEMS = [
-  {
-    id: "33456444-29af-4484-b5d1-af61d06ef889",
-    name: "iPhone 13 Pro",
-    price: 109999
-  },
-  {
-    id: "b8c887ee-d5c6-4815-98fe-7dd102b80d73",
-    name: "iPhone X",
-    price: 89999
-  },
-  {
-    id: "f71bc01c-b3c2-464c-a54c-a857100ef171",
-    name: "Apple AirPods Max Silver",
-    price: 54999
-  },
-  {
-    id: "372d8cd7-2c2b-4d7f-b366-5af2d63509f8",
-    name: "Apple Watch Series 4 Gold",
-    price: 34999
+/**
+ * ItemsService - Dynamic catalog item management
+ *
+ * Loads catalog from the seed package which fetches from external API.
+ * Items are stored in a Map for O(1) lookup by ID.
+ *
+ * In production, this could be backed by:
+ * - Database with periodic refresh
+ * - Redis cache with TTL
+ * - Background CRON job updating prices
+ *
+ * The seed data is generated via `pnpm gen` in packages/seed,
+ * which fetches products from dummyjson.com API and transforms them
+ * with UUIDs and prices in cents.
+ */
+export class ItemsService {
+  protected readonly catalogMap: Map<string, CatalogItem>;
+  protected readonly catalogItems: CatalogItem[];
+
+  constructor() {
+    // Load from dynamically generated seed data
+    this.catalogItems = seededData.map(item => ({
+      id: item.id,
+      name: item.name,
+      price: item.price
+    }));
+
+    this.catalogMap = new Map(
+      this.catalogItems.map(item => [item.id, item])
+    );
   }
-] satisfies CatalogItem[];
 
-const CATALOG_MAP = new Map(CATALOG_ITEMS.map(item => [item.id, item]));
+  /**
+   * Returns all catalog items
+   */
+  public getAll(): CatalogItem[] {
+    return this.catalogItems;
+  }
 
-export function getAllItems() {
-  return CATALOG_ITEMS;
+  /**
+   * Returns a catalog item by ID, or undefined if not found
+   */
+  public getById(id: string): CatalogItem | undefined {
+    return this.catalogMap.get(id);
+  }
+
+  /**
+   * Checks if an item exists in the catalog
+   */
+  public exists(id: string): boolean {
+    return this.catalogMap.has(id);
+  }
+
+  /**
+   * Returns items within a price range (inclusive)
+   */
+  public getByPriceRange(minPrice: number, maxPrice: number): CatalogItem[] {
+    return this.catalogItems.filter(
+      item => item.price >= minPrice && item.price <= maxPrice
+    );
+  }
+
+  /**
+   * Returns the count of items in the catalog
+   */
+  public count(): number {
+    return this.catalogItems.length;
+  }
+}
+
+// Re-export seeded data for backward compatibility
+export const CATALOG_ITEMS: CatalogItem[] = seededData;
+
+export function getAllItems(): CatalogItem[] {
+  return seededData;
 }
 
 export function getItemById(id: string): CatalogItem | undefined {
-  return CATALOG_MAP.get(id);
+  return seededData.find(item => item.id === id);
 }

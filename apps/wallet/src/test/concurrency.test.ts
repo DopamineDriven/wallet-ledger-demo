@@ -9,9 +9,10 @@ import {
 } from "./helpers.ts";
 import { CATALOG_ITEMS } from "@/services/items.ts";
 
-const IPHONE_13_PRO = CATALOG_ITEMS[0]!;
-const AIRPODS_MAX = CATALOG_ITEMS[2]!;
-const APPLE_WATCH = CATALOG_ITEMS[3]!;
+// Dynamic item selection from seeded catalog (sorted by price desc)
+const EXPENSIVE_ITEM = CATALOG_ITEMS[0]!;
+const MID_RANGE_ITEM = CATALOG_ITEMS[Math.floor(CATALOG_ITEMS.length / 2)]!;
+const CHEAP_ITEM = CATALOG_ITEMS[CATALOG_ITEMS.length - 1]!;
 
 describe("Concurrency Safety", async () => {
   let ctx: TestContext;
@@ -29,7 +30,7 @@ describe("Concurrency Safety", async () => {
       const userId = generateUserId();
 
       // Add exactly enough for 2 purchases
-      const creditAmount = APPLE_WATCH.price * 2;
+      const creditAmount = CHEAP_ITEM.price * 2;
       await apiRequest(ctx.baseUrl, "/api/credits", {
         method: "POST",
         userId,
@@ -41,7 +42,7 @@ describe("Concurrency Safety", async () => {
         apiRequest<{ error?: string }>(ctx.baseUrl, "/api/purchases", {
           method: "POST",
           userId,
-          body: { itemId: APPLE_WATCH.id }
+          body: { itemId: CHEAP_ITEM.id }
         })
       );
 
@@ -77,7 +78,7 @@ describe("Concurrency Safety", async () => {
       const userId = generateUserId();
 
       // Add enough for exactly 5 purchases
-      const creditAmount = AIRPODS_MAX.price * 5;
+      const creditAmount = MID_RANGE_ITEM.price * 5;
       await apiRequest(ctx.baseUrl, "/api/credits", {
         method: "POST",
         userId,
@@ -89,7 +90,7 @@ describe("Concurrency Safety", async () => {
         apiRequest<{ error?: string }>(ctx.baseUrl, "/api/purchases", {
           method: "POST",
           userId,
-          body: { itemId: AIRPODS_MAX.id }
+          body: { itemId: MID_RANGE_ITEM.id }
         })
       );
 
@@ -123,7 +124,7 @@ describe("Concurrency Safety", async () => {
       const userId = generateUserId();
 
       // Add enough for 1.5 purchases (should only allow 1)
-      const creditAmount = Math.floor(IPHONE_13_PRO.price * 1.5);
+      const creditAmount = Math.floor(EXPENSIVE_ITEM.price * 1.5);
       await apiRequest(ctx.baseUrl, "/api/credits", {
         method: "POST",
         userId,
@@ -135,7 +136,7 @@ describe("Concurrency Safety", async () => {
         apiRequest<{ error?: string }>(ctx.baseUrl, "/api/purchases", {
           method: "POST",
           userId,
-          body: { itemId: IPHONE_13_PRO.id }
+          body: { itemId: EXPENSIVE_ITEM.id }
         })
       );
 
@@ -162,7 +163,7 @@ describe("Concurrency Safety", async () => {
       );
       assert.equal(
         balanceData?.balance,
-        creditAmount - IPHONE_13_PRO.price,
+        creditAmount - EXPENSIVE_ITEM.price,
         "Balance should be credit minus one item price"
       );
 
@@ -180,7 +181,7 @@ describe("Concurrency Safety", async () => {
           apiRequest(ctx.baseUrl, "/api/credits", {
             method: "POST",
             userId,
-            body: { amount: APPLE_WATCH.price }
+            body: { amount: CHEAP_ITEM.price }
           })
         )
       );
@@ -190,7 +191,7 @@ describe("Concurrency Safety", async () => {
         apiRequest<{ error?: string }>(ctx.baseUrl, "/api/purchases", {
           method: "POST",
           userId,
-          body: { itemId: APPLE_WATCH.id }
+          body: { itemId: CHEAP_ITEM.id }
         })
       );
 
@@ -234,13 +235,13 @@ describe("Concurrency Safety", async () => {
         apiRequest(ctx.baseUrl, "/api/credits", {
           method: "POST",
           userId,
-          body: { amount: APPLE_WATCH.price }
+          body: { amount: CHEAP_ITEM.price }
         }),
         // Then try purchase (might race with credit)
         apiRequest(ctx.baseUrl, "/api/purchases", {
           method: "POST",
           userId,
-          body: { itemId: APPLE_WATCH.id }
+          body: { itemId: CHEAP_ITEM.id }
         })
       ] as const;
 
@@ -266,7 +267,7 @@ describe("Concurrency Safety", async () => {
       } else {
         assert.equal(
           finalBalance?.balance,
-          APPLE_WATCH.price,
+          CHEAP_ITEM.price,
           "If purchase failed, balance should equal credit amount"
         );
       }

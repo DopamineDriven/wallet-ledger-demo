@@ -9,8 +9,9 @@ import {
 } from "./helpers.ts";
 import { CATALOG_ITEMS } from "@/services/items.ts";
 
-const IPHONE_13_PRO = CATALOG_ITEMS[0]!;
-const APPLE_WATCH = CATALOG_ITEMS[3]!;
+// Dynamic item selection from seeded catalog
+const EXPENSIVE_ITEM = CATALOG_ITEMS[0]!; // Most expensive (sorted desc by price)
+const CHEAP_ITEM = CATALOG_ITEMS[CATALOG_ITEMS.length - 1]!; // Cheapest
 
 describe("Wallet API", async () => {
   let ctx: TestContext;
@@ -54,10 +55,12 @@ describe("Wallet API", async () => {
       );
       assert.equal(status, 200);
       assert.equal(Array.isArray(data), true);
-      assert.equal(data?.length, 4);
+      assert.equal(data?.length, CATALOG_ITEMS.length);
+      // Verify first item matches seed data
       const firstItem = data?.[0];
-      assert.equal(firstItem?.name, "iPhone 13 Pro");
-      assert.equal(firstItem?.price, 109999);
+      assert.equal(firstItem?.id, EXPENSIVE_ITEM.id);
+      assert.equal(firstItem?.name, EXPENSIVE_ITEM.name);
+      assert.equal(firstItem?.price, EXPENSIVE_ITEM.price);
     });
   });
 
@@ -148,13 +151,14 @@ describe("Wallet API", async () => {
 
   describe("POST /api/purchases", () => {
     let purchaseUserId: string;
+    const purchaseBudget = CHEAP_ITEM.price * 3; // Enough for 3 cheap items
 
     before(async () => {
       purchaseUserId = generateUserId();
       await apiRequest(ctx.baseUrl, "/api/credits", {
         method: "POST",
         userId: purchaseUserId,
-        body: { amount: 200000 }
+        body: { amount: purchaseBudget }
       });
     });
 
@@ -200,7 +204,7 @@ describe("Wallet API", async () => {
       const { status, data } = await apiRequest(
         ctx.baseUrl,
         "/api/purchases",
-        { method: "POST", userId: purchaseUserId, body: { itemId: APPLE_WATCH.id } }
+        { method: "POST", userId: purchaseUserId, body: { itemId: CHEAP_ITEM.id } }
       );
       assert.equal(status, 204);
       assert.equal(data, null);
@@ -213,7 +217,7 @@ describe("Wallet API", async () => {
         { userId: purchaseUserId }
       );
       assert.equal(status, 200);
-      assert.equal(data?.balance, 200000 - APPLE_WATCH.price);
+      assert.equal(data?.balance, purchaseBudget - CHEAP_ITEM.price);
     });
 
     it("should return 409 for insufficient balance", async () => {
@@ -221,13 +225,13 @@ describe("Wallet API", async () => {
       await apiRequest(ctx.baseUrl, "/api/credits", {
         method: "POST",
         userId: poorUserId,
-        body: { amount: 1000 }
+        body: { amount: 1000 } // Not enough for any item
       });
 
       const { status, data } = await apiRequest<{ error: string }>(
         ctx.baseUrl,
         "/api/purchases",
-        { method: "POST", userId: poorUserId, body: { itemId: IPHONE_13_PRO.id } }
+        { method: "POST", userId: poorUserId, body: { itemId: EXPENSIVE_ITEM.id } }
       );
       assert.equal(status, 409);
       assert.equal(data?.error, "Insufficient balance");

@@ -3,6 +3,9 @@ import * as dotenv from "dotenv";
 import type { PrismaClient } from "@wallet-ledger/db/node";
 import { DbService } from "@wallet-ledger/db/node";
 import { WalletServer } from "@/server/server.ts";
+import { WalletResolver } from "@/resolver/index.ts";
+import { LedgerService } from "@/services/ledger.ts";
+import { ItemsService } from "@/services/items.ts";
 
 dotenv.config({ quiet: true });
 
@@ -21,19 +24,30 @@ export async function createTestContext(): Promise<TestContext> {
     throw new Error("DATABASE_URL required for tests");
   }
 
-  const db = new DbService(databaseUrl);
-  const server = new WalletServer(db.prismaClient);
-
   const port = portCounter++;
-  await new Promise<void>((resolve) => server.listen(port, resolve));
+  const db = new DbService(databaseUrl);
+  const prisma = db.prismaClient;
+
+  // Initialize domain services
+  const ledgerService = new LedgerService(prisma);
+  const itemsService = new ItemsService();
+
+  // Initialize resolver with service dependencies
+  const resolver = new WalletResolver(ledgerService, itemsService);
+
+  // Initialize server and inject resolver
+  const server = new WalletServer({ port });
+  server.setResolver(resolver);
+
+  await server.start();
 
   return {
     server,
     baseUrl: `http://localhost:${port}`,
-    prisma: db.prismaClient,
+    prisma,
     cleanup: async () => {
-      await server.close();
-      await db.prismaClient.$disconnect();
+      await server.stop();
+      await prisma.$disconnect();
     }
   };
 }

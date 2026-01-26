@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { isValidUuid, isPositiveInteger } from "@/utils/validation.ts";
+import { ValidationService } from "@/services/validation.ts";
+
+const { isValidUuid, isPositiveInteger } = ValidationService;
 
 describe("isValidUuid", () => {
   it("should accept valid lowercase UUID", () => {

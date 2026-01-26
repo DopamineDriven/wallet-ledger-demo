@@ -1,4 +1,4 @@
-import type { AllProductPaths } from "@/types.ts";
+import type { AllProductPaths, ProductReviewsSingleton } from "@/types.ts";
 import { ItemSeeder } from "@/seed.ts";
 
 function checker(s: string) {
@@ -51,17 +51,39 @@ if (process.argv[2] === "--probe" && process.argv[3] === "init") {
   ) {
     path = process.argv[5];
   }
-  seed
+ await seed
     .seeder((path ??= "products"), {
       limit: 50,
       order: "desc",
-      select: ["price", "id", "title", "description"],
+      select: [
+        "price",
+        "id",
+        "title",
+        "description",
+        "images",
+        "reviews",
+        "shippingInformation",
+        "stock",
+        "sku",
+        "brand"
+      ],
       skip: 0,
       sortBy: "price"
     })
     .then(async v => {
       const r = (await import("node:crypto")).randomUUID;
-      const agg = Array.of<{ id: string; price: number; name: string }>();
+      const agg = Array.of<{
+        id: string;
+        name: string;
+        title: string;
+        price: number;
+        stock: number;
+        sku: string;
+        shippingInformation: string;
+        reviews: ProductReviewsSingleton[];
+        images: string[];
+        brand?: string | undefined | undefined;
+      }>();
       for (let i = 0; i <= v.products.length; i++) {
         const internal = r();
         const indexT = v.products[i];
@@ -69,6 +91,7 @@ if (process.argv[2] === "--probe" && process.argv[3] === "init") {
         if (indexT) {
           const { id: _id, description: _descript, ...rest } = indexT;
           agg.push({
+            ...rest,
             id: internal,
             price: Math.round(rest.price * 100),
             name: rest.title

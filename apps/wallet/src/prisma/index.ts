@@ -3,7 +3,7 @@ import { PrismaClient, PrismaDbService } from "@wallet-ledger/db/factory";
 export class PrismaWalletService extends PrismaDbService {
   protected readonly prismaClient: PrismaClient;
 
-  
+
 
   constructor(
     prisma: PrismaDbService,
@@ -19,6 +19,6 @@ export class PrismaWalletService extends PrismaDbService {
       idleTimeoutMs,
       poolMax
     });
-    this.prismaClient = prisma.dbBase.prismaClient;
+    this.prismaClient = prisma.p(false);
   }
 }
