@@ -6,6 +6,7 @@ import { WalletServer } from "@/server/server.ts";
 import { WalletResolver } from "@/resolver/index.ts";
 import { LedgerService } from "@/services/ledger.ts";
 import { ItemsService } from "@/services/items.ts";
+import { IdempotencyService } from "@/services/idempotency.ts";
 
 dotenv.config({ quiet: true });
 
@@ -19,9 +20,9 @@ export interface TestContext {
 let portCounter = 4000;
 
 export async function createTestContext(): Promise<TestContext> {
-  const databaseUrl = process.env.DATABASE_URL;
+  const databaseUrl = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
   if (!databaseUrl) {
-    throw new Error("DATABASE_URL required for tests");
+    throw new Error("DIRECT_URL or DATABASE_URL required for tests");
   }
 
   const port = portCounter++;
@@ -31,9 +32,10 @@ export async function createTestContext(): Promise<TestContext> {
   // Initialize domain services
   const ledgerService = new LedgerService(prisma);
   const itemsService = new ItemsService();
+  const idempotencyService = new IdempotencyService(prisma);
 
   // Initialize resolver with service dependencies
-  const resolver = new WalletResolver(ledgerService, itemsService);
+  const resolver = new WalletResolver(ledgerService, itemsService, idempotencyService);
 
   // Initialize server and inject resolver
   const server = new WalletServer({ port });
@@ -100,5 +102,8 @@ export async function cleanupUserData(
   prisma: TestContext["prisma"],
   userId: string
 ): Promise<void> {
+  // Delete idempotency records first (FK constraint to LedgerEntry)
+  await prisma.idempotencyRecord.deleteMany({ where: { userId } });
+  // Then delete ledger entries
   await prisma.ledgerEntry.deleteMany({ where: { userId } });
 }

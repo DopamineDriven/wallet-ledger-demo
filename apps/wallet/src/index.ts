@@ -1,11 +1,11 @@
+import { WalletResolver } from "@/resolver/index.ts";
+import { WalletServer } from "@/server/server.ts";
+import { IdempotencyService } from "@/services/idempotency.ts";
+import { ItemsService } from "@/services/items.ts";
+import { LedgerService } from "@/services/ledger.ts";
+import { LoggerService } from "@/services/logger.ts";
 import * as dotenv from "dotenv";
 import { DbService } from "@wallet-ledger/db/node";
-import { WalletServer } from "@/server/server.ts";
-import { WalletResolver } from "@/resolver/index.ts";
-import { LedgerService } from "@/services/ledger.ts";
-import { ItemsService } from "@/services/items.ts";
-import { LoggerService } from "@/services/logger.ts";
-import { IdempotencyService } from "@/services/idempotency.ts";
 
 dotenv.config({ quiet: true });
 
@@ -14,7 +14,12 @@ export { WalletResolver } from "@/resolver/index.ts";
 export { LedgerService } from "@/services/ledger.ts";
 export { LoggerService } from "@/services/logger.ts";
 export { IdempotencyService } from "@/services/idempotency.ts";
-export { ItemsService, CATALOG_ITEMS, getAllItems, getItemById } from "@/services/items.ts";
+export {
+  ItemsService,
+  CATALOG_ITEMS,
+  getAllItems,
+  getItemById
+} from "@/services/items.ts";
 export type { CatalogItem } from "@/services/items.ts";
 
 declare module "http" {
@@ -111,7 +116,11 @@ async function exe(): Promise<void> {
     logger.debug("Domain services initialized");
 
     // Initialize resolver with service dependencies
-    const resolver = new WalletResolver(ledgerService, itemsService, idempotencyService);
+    const resolver = new WalletResolver(
+      ledgerService,
+      itemsService,
+      idempotencyService
+    );
 
     // Initialize server and inject resolver
     const server = new WalletServer({ port, logger });
@@ -122,12 +131,11 @@ async function exe(): Promise<void> {
       logger.info(`Received ${signal}, shutting down gracefully...`);
       try {
         await server.stop();
-        await prisma.$disconnect();
         logger.info("Shutdown complete");
-        process.exit(0);
+        process.exitCode = 0;
       } catch (err) {
+        process.exitCode = 1;
         logger.error("Error during shutdown", { error: err });
-        process.exit(1);
       }
     };
 
@@ -139,7 +147,7 @@ async function exe(): Promise<void> {
     logger.info(`Wallet API listening on port ${port}`);
   } catch (err) {
     logger.fatal("Failed to initialize wallet service", { error: err });
-    process.exit(1);
+    process.exitCode = 1;
   }
 }
 

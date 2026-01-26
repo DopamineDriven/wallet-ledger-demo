@@ -66,7 +66,7 @@ function safeErrMsg(err: unknown) {
   } else return String(err);
 }
 
-async function connectTest() {
+async function _connectTest() {
   const { DbService } = await import("@wallet-ledger/db/node");
   const { prismaClient } = new DbService(process.env.DATABASE_URL ?? "");
   const uuid = randomUUID();

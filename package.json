@@ -24,7 +24,7 @@
     "list:packages": "bash ./manage.sh list",
     "run:seed": "pnpm --filter @wallet-ledger/seed gen",
     "run:wallet": "turbo dev --filter=@wallet-ledger/wallet",
-    "test:wallet": "pnpm --filter @wallet-ledger/wallet test"
+    "test:wallet": "cd apps/wallet && pnpm test"
   },
   "devDependencies": {
     "@wallet-ledger/eslint-config": "workspace:*",
