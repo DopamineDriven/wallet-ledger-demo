@@ -1,4 +1,4 @@
-export { ItemSeeder } from "@/seed.ts";
+export { ItemSeeder,  } from "@/seed.ts";
 export type {
   AllProductPaths,
   CategoryUnion,
@@ -19,7 +19,7 @@ export type {
   SelectUnion,
   SortByUnion
 } from "@/types.ts";
-export { seededData } from "@/items/index.ts";
+export { seededData, } from "@/items/index.ts";
 
 declare module "http" {
   interface IncomingHttpHeaders extends NodeJS.Dict<string | string[]> {

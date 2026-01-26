@@ -1,4 +1,4 @@
-import { seededData } from "@wallet-ledger/seed";
+import { ItemSeeder, ProductDataFull, seededData } from "@wallet-ledger/seed";
 
 export interface CatalogItem {
   id: string;
@@ -21,11 +21,14 @@ export interface CatalogItem {
  * which fetches products from dummyjson.com API and transforms them
  * with UUIDs and prices in cents.
  */
-export class ItemsService {
+export class ItemsService<
+  T extends keyof ProductDataFull = keyof ProductDataFull
+> extends ItemSeeder<T> {
   protected readonly catalogMap: Map<string, CatalogItem>;
   protected readonly catalogItems: CatalogItem[];
 
   constructor() {
+    super();
     // Load from dynamically generated seed data
     this.catalogItems = seededData.map(item => ({
       id: item.id,
@@ -33,9 +36,19 @@ export class ItemsService {
       price: item.price
     }));
 
-    this.catalogMap = new Map(
-      this.catalogItems.map(item => [item.id, item])
-    );
+    this.catalogMap = new Map(this.catalogItems.map(item => [item.id, item]));
+  }
+
+  public async reusableFetching() {
+    return await this.reusableFetch("products", {
+      limit: 30,
+      order: "desc",sortBy: "price", skip: 0,
+      select: [
+        "price",
+        "title",
+        "id"
+      ]
+    });
   }
 
   /**

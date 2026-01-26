@@ -17,7 +17,7 @@ const migrationsDir = pathname =>
   pathname
     .slice(0, pathname.lastIndexOf("wallet-ledger-demo/"))
     .concat("wallet-ledger-demo/packages/db/prisma/migrations");
-    console.log(migrationsDir(project));
+console.log(migrationsDir(project));
 export default tseslint.config(
   includeIgnoreFile(join(import.meta.dirname, "../../.gitignore")),
   {
@@ -83,6 +83,6 @@ export default tseslint.config(
   },
   {
     linterOptions: { reportUnusedDisableDirectives: true },
-    languageOptions: { parserOptions: { project } }
+    languageOptions: { parserOptions: { project: true } }
   }
 );

@@ -1,18 +1,21 @@
 import assert from "node:assert/strict";
-import { describe, it, before, after } from "node:test";
+import { after, before, describe, it } from "node:test";
+import { CATALOG_ITEMS } from "@/services/items.ts";
+import type { TestContext } from "./helpers.ts";
 import {
-  createTestContext,
-  generateUserId,
   apiRequest,
   cleanupUserData,
-  type TestContext
+  createTestContext,
+  generateUserId
 } from "./helpers.ts";
-import { CATALOG_ITEMS } from "@/services/items.ts";
 
 // Dynamic item selection from seeded catalog (sorted by price desc)
-const EXPENSIVE_ITEM = CATALOG_ITEMS[0]!;
-const MID_RANGE_ITEM = CATALOG_ITEMS[Math.floor(CATALOG_ITEMS.length / 2)]!;
-const CHEAP_ITEM = CATALOG_ITEMS[CATALOG_ITEMS.length - 1]!;
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+const EXPENSIVE_ITEM = CATALOG_ITEMS?.[0]!;
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+const MID_RANGE_ITEM = CATALOG_ITEMS?.[Math.floor(CATALOG_ITEMS.length / 2)]!;
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+const CHEAP_ITEM = CATALOG_ITEMS?.[CATALOG_ITEMS.length - 1]!;
 
 describe("Concurrency Safety", async () => {
   let ctx: TestContext;
@@ -48,8 +51,8 @@ describe("Concurrency Safety", async () => {
 
       const results = await Promise.all(purchasePromises);
 
-      const successes = results.filter((r) => r.status === 204);
-      const insufficientFunds = results.filter((r) => r.status === 409);
+      const successes = results.filter(r => r.status === 204);
+      const insufficientFunds = results.filter(r => r.status === 409);
 
       // Exactly 2 should succeed, 8 should fail with 409
       assert.equal(
@@ -96,8 +99,8 @@ describe("Concurrency Safety", async () => {
 
       const results = await Promise.all(purchasePromises);
 
-      const successes = results.filter((r) => r.status === 204);
-      const insufficientFunds = results.filter((r) => r.status === 409);
+      const successes = results.filter(r => r.status === 204);
+      const insufficientFunds = results.filter(r => r.status === 409);
 
       assert.equal(
         successes.length,
@@ -142,7 +145,7 @@ describe("Concurrency Safety", async () => {
 
       const results = await Promise.all(purchasePromises);
 
-      const successes = results.filter((r) => r.status === 204);
+      const successes = results.filter(r => r.status === 204);
 
       // Only 1 should succeed
       assert.equal(
@@ -158,7 +161,7 @@ describe("Concurrency Safety", async () => {
         { userId }
       );
       assert.ok(
-        balanceData!.balance >= 0,
+        (balanceData?.balance ?? 0) >= 0,
         `Balance should be non-negative, got ${balanceData?.balance}`
       );
       assert.equal(
@@ -177,7 +180,7 @@ describe("Concurrency Safety", async () => {
 
       // Give each user exactly enough for 1 purchase
       await Promise.all(
-        users.map((userId) =>
+        users.map(userId =>
           apiRequest(ctx.baseUrl, "/api/credits", {
             method: "POST",
             userId,
@@ -187,7 +190,7 @@ describe("Concurrency Safety", async () => {
       );
 
       // All 5 users purchase at the same time
-      const purchasePromises = users.map((userId) =>
+      const purchasePromises = users.map(userId =>
         apiRequest<{ error?: string }>(ctx.baseUrl, "/api/purchases", {
           method: "POST",
           userId,
@@ -198,7 +201,7 @@ describe("Concurrency Safety", async () => {
       const results = await Promise.all(purchasePromises);
 
       // All should succeed since they're different users
-      const successes = results.filter((r) => r.status === 204);
+      const successes = results.filter(r => r.status === 204);
       assert.equal(
         successes.length,
         5,
@@ -206,7 +209,7 @@ describe("Concurrency Safety", async () => {
       );
 
       // Verify all balances are 0
-      const balancePromises = users.map((userId) =>
+      const balancePromises = users.map(userId =>
         apiRequest<{ balance: number }>(ctx.baseUrl, "/api/balance", { userId })
       );
       const balances = await Promise.all(balancePromises);
@@ -217,7 +220,7 @@ describe("Concurrency Safety", async () => {
 
       // Cleanup
       await Promise.all(
-        users.map((userId) => cleanupUserData(ctx.prisma, userId))
+        users.map(userId => cleanupUserData(ctx.prisma, userId))
       );
     });
   });

@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ValidationService } from "@/services/validation.ts";
 
-const { isValidUuid, isPositiveInteger } = ValidationService;
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const isValidUuid = ValidationService.isValidUuid;
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const isPositiveInteger = ValidationService.isPositiveInteger;
 
 describe("isValidUuid", () => {
   it("should accept valid lowercase UUID", () => {
