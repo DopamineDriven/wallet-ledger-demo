@@ -3,21 +3,7 @@ import type { UserConfig as Options } from "tsdown";
 import { defineConfig } from "tsdown";
 
 export default defineConfig(
-  (
-    options: Omit<
-      Options,
-      | "entry"
-      | "target"
-      | "dts"
-      | "watch"
-      | "format"
-      | "cwd"
-      | "sourcemap"
-      | "clean"
-      | "outDir"
-      | "tsconfig"
-    >
-  ) =>
+  (options: Options) =>
     ({
       ...options,
       entry: ["src/index.ts", "src/utils.ts", "src/types.ts"],

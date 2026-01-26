@@ -109,6 +109,7 @@ build_targeted() {
     local build_order=(
         "@wallet-ledger/types"
         "@wallet-ledger/db"
+        "@wallet-ledger/seed"
         "@wallet-ledger/wallet"
     )
 

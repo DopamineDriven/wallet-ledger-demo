@@ -2,6 +2,30 @@ export type Unenumerate<T> = T extends (infer U)[] | readonly (infer U)[]
   ? U
   : T;
 
+export type BigIntKeys<T> = {
+  [K in keyof T]: T[K] extends bigint ? K : never;
+}[keyof T];
+
+export type SerializeBigInts<T, Serialized extends boolean = false> = DX<{
+  [K in keyof T]: T[K] extends bigint
+    ? Serialized extends true
+      ? number
+      : bigint
+    : T[K];
+}>;
+
+// precision (field-level) targeting
+export type PrecisionSerializeBigIntField<
+  T,
+  Field extends keyof T = BigIntKeys<T>,
+  Serialized extends boolean = false
+> = DX<{
+  [K in keyof T]: K extends Field
+    ? Serialized extends true
+      ? number
+      : bigint
+    : T[K];
+}>;
 /**
  * opposite of Exclude with better intellisense/validation
  */
@@ -99,7 +123,6 @@ export type DX<Y> = {
 export type Constructor<A extends any[] = any[], I = object> = new (
   ...args: A
 ) => I;
-
 
 export type CommonDiscriminants =
   | "type"

@@ -4,8 +4,10 @@
   "private": true,
   "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
   "scripts": {
+    "env:seed": "bash ./populate-env.sh",
     "build:db": "turbo build --filter=@wallet-ledger/db",
-    "build:targeted": "pnpm build:db && pnpm:build:types && pnpm build:wallet",
+    "build:seed": "turbo build --filter=@wallet-ledger/seed",
+    "build:targeted": "pnpm build:db && pnpm:build:types && pnpm build:seed && pnpm build:wallet",
     "build:types": "turbo build --filter=@wallet-ledger/types",
     "build:wallet": "turbo build --filter=@wallet-ledger/wallet",
     "clean": "git clean -xdf node_modules",
@@ -14,11 +16,15 @@
     "lint": "turbo lint",
     "prepare": "husky",
     "typecheck": "turbo typecheck",
+    "stress:test:new": "bash ./new-user-stress-test.sh",
+    "stress:test:api": "bash ./stress-test-api.sh",
     "clean:house": "bash ./manage.sh clean:house",
     "generate:base64": "openssl rand -base64 64",
     "generate:hex": "openssl rand -hex 64",
     "list:packages": "bash ./manage.sh list",
-    "run:wallet": "turbo dev --filter=@wallet-ledger/wallet"
+    "run:seed": "pnpm --filter @wallet-ledger/seed gen",
+    "run:wallet": "turbo dev --filter=@wallet-ledger/wallet",
+    "test:wallet": "pnpm --filter @wallet-ledger/wallet test"
   },
   "devDependencies": {
     "@wallet-ledger/eslint-config": "workspace:*",
@@ -30,7 +36,7 @@
     "eslint": "catalog:eslint",
     "husky": "^9.1.7",
     "prettier": "catalog:prettier",
-    "tsx": "^4.21.0",
+    "tsx": "catalog:tsx",
     "turbo": "^2.7.6",
     "typescript": "catalog:ts"
   },

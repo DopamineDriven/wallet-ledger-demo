@@ -1,7 +1,7 @@
 {
-  "name": "@wallet-ledger/types",
+  "name": "@wallet-ledger/seed",
   "version": "1.0.0",
-  "description": "convenient type helpers",
+  "description": "convenient seeding helpers",
   "publishConfig": {
     "access": "public",
     "typesVersions": {
@@ -9,8 +9,11 @@
         "*": [
           "dist/index.d.ts"
         ],
+        "items": [
+          "dist/items/index.d.ts"
+        ],
         "utils": [
-          "dist/utils.d.ts"
+          "dist/seed.d.ts"
         ],
         "types": [
           "dist/types.d.ts"
@@ -24,6 +27,9 @@
     "*": {
       "*": [
         "dist/index.d.ts"
+      ],
+      "items": [
+        "dist/items/index.d.ts"
       ],
       "utils": [
         "dist/utils.d.ts"
@@ -42,6 +48,7 @@
   ],
   "exports": {
     ".": "./dist/index.js",
+    "./items": "./dist/items/index.js",
     "./utils": "./dist/utils.js",
     "./types": "./dist/types.js"
   },
@@ -50,13 +57,16 @@
     "dev": "pnpm build",
     "lint": "eslint",
     "format": "prettier --write \"src/**/*.{ts,cts,mts,js,mjs,cjs,json,yaml,yml}\" --ignore-unknown --cache",
-    "clean": "git clean -xdf .turbo dist node_modules"
+    "clean": "git clean -xdf .turbo dist node_modules",
+    "gen": "pnpm gen:items",
+    "gen:items": "tsx src/test/index.ts --probe init --path \"products\" --gen \"items\""
   },
   "dependencies": {
-    "@wallet-ledger/db": "workspace:*"
+    "@d0paminedriven/fs": "catalog:ddfs",
+    "@wallet-ledger/types": "workspace:*"
   },
   "devDependencies": {
-    "@d0paminedriven/fs": "catalog:ddfs",
+    "@wallet-ledger/db": "workspace:*",
     "@wallet-ledger/eslint-config": "workspace:*",
     "@wallet-ledger/prettier-config": "workspace:*",
     "@wallet-ledger/tsconfig": "workspace:*",

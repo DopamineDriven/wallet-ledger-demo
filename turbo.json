@@ -30,6 +30,7 @@
     "COREPACK_ENABLE_STRICT",
     "DATABASE_URL",
     "DIRECT_URL",
+    "LOG_LEVEL",
     "IS_PROD",
     "NODE_ENV",
     "PORT",

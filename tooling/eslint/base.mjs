@@ -15,8 +15,9 @@ const project = relative(process.cwd(), "tsconfig.json");
  */
 const migrationsDir = pathname =>
   pathname
-    .slice(0, pathname.lastIndexOf("turborepo/"))
-    .concat("turborepo/packages/db/prisma/migrations");
+    .slice(0, pathname.lastIndexOf("wallet-ledger-demo/"))
+    .concat("wallet-ledger-demo/packages/db/prisma/migrations");
+    console.log(migrationsDir(project));
 export default tseslint.config(
   includeIgnoreFile(join(import.meta.dirname, "../../.gitignore")),
   {
@@ -27,8 +28,7 @@ export default tseslint.config(
       ".vscode/**/*.json",
       "**/node_modules/**",
       "**/dist/**",
-      "**/build/**",
-      "**/.next/cache/**"
+      "**/build/**"
     ]
   },
   {
