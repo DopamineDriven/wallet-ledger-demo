@@ -14,25 +14,29 @@
         "dist/*.d.ts",
         "dist/*/index.d.ts"
       ],
-      "logger": [
-        "dist/logger/index.d.ts"
-      ],
-
       "prisma": [
-        "dist/prisma/debits.d.ts",
-        "dist/prisma/credits.d.ts",
-        "dist/prisma/idempotency.d.ts",
-        "dist/prisma/index.d.ts",
-        "dist/prisma/utils.d.ts"
+        "dist/prisma/index.d.ts"
       ],
       "resolver": [
         "dist/resolver/index.d.ts"
       ],
-      "types": [
-        "dist/types/index.d.ts"
-      ],
       "server": [
-        "dist/server/index.d.ts"
+        "dist/server/server.d.ts"
+      ],
+      "services/idempotency": [
+        "dist/services/idempotency.d.ts"
+      ],
+      "services/items": [
+        "dist/services/items.d.ts"
+      ],
+      "services/ledger": [
+        "dist/services/ledger.d.ts"
+      ],
+      "services/logger": [
+        "dist/services/logger.d.ts"
+      ],
+      "services/validation": [
+        "dist/services/validation.d.ts"
       ]
     }
   },
