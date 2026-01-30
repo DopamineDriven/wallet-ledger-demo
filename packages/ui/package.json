@@ -1,0 +1,123 @@
+{
+  "name": "@wallet-ledger/ui",
+  "version": "1.0.0",
+  "description": "convenient ui helpers",
+  "files": [
+    "dist/**/*.{js,mjs,cjs,d.mts,d.ts,d.cts,css}"
+  ],
+  "license": "MIT",
+  "sideEffecs": [
+    "**/*.css"
+  ],
+  "type": "module",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/*.d.ts",
+        "dist/*.d.cts",
+        "dist/*/index.d.ts"
+      ],
+      "globals.css": [
+        "dist/globals.d.ts"
+      ],
+      "icons": [
+        "dist/icons/index.d.ts",
+        "dist/icons/*.d.ts"
+      ],
+      "lib": [
+        "dist/lib/*.d.ts"
+      ],
+      "ui": [
+        "dist/ui/*.d.ts"
+      ]
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "typesVersions": {
+      "*": {
+        "*": [
+          "dist/*.d.ts",
+          "dist/*.d.cts",
+          "dist/*/index.d.ts"
+        ],
+        "globals.css": [
+          "dist/globals.d.ts"
+        ],
+        "icons": [
+          "dist/icons/index.d.ts",
+          "dist/icons/*.d.ts"
+        ],
+        "lib": [
+          "dist/lib/*.d.ts"
+        ],
+        "ui": [
+          "dist/ui/*.d.ts"
+        ]
+      }
+    }
+  },
+  "source": "src/index.ts",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js",
+    "./globals.css": "./dist/globals.css",
+    "./icons": "./dist/icons/index.js",
+    "./icons/*": "./dist/icons/*.js",
+    "./lib/*": "./dist/lib/*.js",
+    "./ui/*": "./dist/ui/*.js"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "dev": "pnpm build",
+    "prebuild": "rm -rf dist",
+    "postbuild": "tsx src/services/postbuild.ts flag-check",
+    "build": "tsup",
+    "clean": "git clean -xdf dist node_modules",
+    "types": "tsgo --emitDeclarationOnly"
+  },
+  "peerDependencies": {
+    "next": ">=16.1.6",
+    "react": ">=19.2.4",
+    "react-dom": ">=19.2.4",
+    "tailwindcss": ">=4.1.18"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "catalog:radix",
+    "@swc/helpers": "catalog:swc",
+    "class-variance-authority": "catalog:cva",
+    "clsx": "catalog:clsx",
+    "tailwind-merge": "catalog:tw"
+  },
+  "devDependencies": {
+    "@wallet-ledger/eslint-config": "workspace:*",
+    "@wallet-ledger/prettier-config": "workspace:*",
+    "@wallet-ledger/tsconfig": "workspace:*",
+    "@d0paminedriven/fs": "catalog:ddfs",
+    "@microsoft/api-extractor": "catalog:tsup",
+    "@swc/core": "catalog:swc",
+    "@tailwindcss/postcss": "catalog:tw",
+    "@types/node": "catalog:node",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@typescript/native-preview": "catalog:tsgo7",
+    "autoprefixer": "catalog:styles",
+    "eslint": "catalog:eslint",
+    "jiti": "catalog:jiti",
+    "next": "catalog:next",
+    "postcss": "catalog:styles",
+    "prettier": "catalog:prettier",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "tailwindcss": "catalog:tw",
+    "terser": "catalog:tsup",
+    "tslib": "catalog:tslib",
+    "tsup": "catalog:tsup",
+    "tsx": "catalog:tsx",
+    "tw-animate-css": "catalog:tw",
+    "typescript": "catalog:ts"
+  },
+  "prettier": "@wallet-ledger/prettier-config"
+}

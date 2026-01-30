@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
-    "./base": "./base.mjs"
+    "./base": "./base.mjs",
+    "./next": "./next.mjs",
+    "./react": "./react.mjs"
   },
   "license": "MIT",
   "scripts": {
@@ -16,10 +18,15 @@
     "@d0paminedriven/fs": "catalog:ddfs",
     "@eslint/compat": "^2.0.1",
     "@eslint/js": "^9.39.2",
-    "@ts-safeql/eslint-plugin": "^4.1.1",
-    "eslint-config-turbo": "^2.7.5",
+    "@next/eslint-plugin-next": "catalog:next",
+    "@ts-safeql/eslint-plugin": "^4.2.0",
+    "eslint-config-turbo": "catalog:turbo",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-turbo": "^2.7.6",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-compiler": "19.1.0-rc.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-turbo": "catalog:turbo",
     "jiti": "catalog:jiti",
     "typescript-eslint": "catalog:tseslint"
   },

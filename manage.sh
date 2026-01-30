@@ -110,6 +110,7 @@ build_targeted() {
         "@wallet-ledger/types"
         "@wallet-ledger/db"
         "@wallet-ledger/seed"
+        "@wallet-ledger/ui"
         "@wallet-ledger/wallet"
     )
 
