@@ -27,6 +27,7 @@
     "postclean:house": "pnpm --filter @wallet-ledger/web typegen",
     "run:seed": "pnpm --filter @wallet-ledger/seed gen",
     "run:wallet": "turbo dev --filter=@wallet-ledger/wallet",
+    "run:web": "turbo dev --filter=@wallet-ledger/web",
     "test:wallet": "cd apps/wallet && pnpm test"
   },
   "devDependencies": {

@@ -6,6 +6,8 @@ packages:
 catalogs:
   clsx:
     clsx: ^2.1.1
+  csstype:
+    csstype: ^3.2.3
   cva:
     class-variance-authority: ^0.7.1
   ddfs:
